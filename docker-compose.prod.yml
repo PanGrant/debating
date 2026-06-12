@@ -1,0 +1,14 @@
+# Production-like Docker Compose Override
+# This file pulls pre-built images from GitHub Container Registry instead of building locally.
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  backend:
+    image: ghcr.io/pangrant/debate-backend:latest
+    # Remove build context to ensure it uses the pulled image
+    build: !!null 
+
+  frontend:
+    image: ghcr.io/pangrant/debate-frontend:latest
+    # Remove build context to ensure it uses the pulled image
+    build: !!null
