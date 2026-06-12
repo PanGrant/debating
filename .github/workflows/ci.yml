@@ -1,0 +1,59 @@
+name: CI - Build and Test
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+
+env:
+  REGISTRY: ghcr.io
+  # Replace 'YOUR_USERNAME' with your actual GitHub username lowercase
+  IMAGE_NAME_PREFIX: ${{ github.repository_owner }}
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 1. Verify Backend (Optional Lint/Test step)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+      
+      # 2. Log in to GitHub Container Registry
+      # Only login if we are on main branch to save time/tokens on random PRs, 
+      # or you can login every time if you want to push PR images.
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 3. Build Backend Image
+      - name: Build and Push Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_PREFIX }}/debate-backend:latest
+
+      # 4. Build Frontend Image
+      - name: Build and Push Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_PREFIX }}/debate-frontend:latest

@@ -1,0 +1,37 @@
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: debate-backend
+    expose:
+      - "8000"
+    # Port 8000 is mapped for direct testing if needed, though frontend uses internal networking
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - debate-network
+
+  # Frontend Nginx Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: debate-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - debate-network
+
+networks:
+  debate-network:
+    driver: bridge

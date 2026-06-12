@@ -1,0 +1,231 @@
+:root {
+    --bg-color: #121214;
+    --card-bg: #1a1a1e;
+    --text-primary: #e4e4e7;
+    --text-secondary: #a1a1aa;
+    --accent: #6366f1;
+    --accent-hover: #4f46e5;
+    --border-color: #27272a;
+    --persona-a-color: #f43f5e;
+    --persona-b-color: #06b6d4;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+header {
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #a5b4fc, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+}
+
+.setup-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+input[type="text"] {
+    background-color: #0e0e11;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+button {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+    background-color: var(--accent-hover);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.arena-section {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background-color: #0e0e11;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.3s ease;
+}
+
+.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.versus-banner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #1a1a1e;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.persona-tag {
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.tag-a {
+    background-color: rgba(244, 63, 94, 0.15);
+    color: var(--persona-a-color);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.tag-b {
+    background-color: rgba(6, 182, 212, 0.15);
+    color: var(--persona-b-color);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.vs {
+    font-style: italic;
+    font-weight: 800;
+    color: var(--text-secondary);
+}
+
+.chat-window {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.bubble {
+    max-width: 80%;
+    padding: 12px 18px;
+    border-radius: 16px;
+    font-size: 0.98rem;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+.bubble-a {
+    align-self: flex-start;
+    background-color: #1e1b21;
+    border-left: 4px solid var(--persona-a-color);
+    border-bottom-left-radius: 4px;
+}
+
+.bubble-b {
+    align-self: flex-end;
+    background-color: #171c24;
+    border-right: 4px solid var(--persona-b-color);
+    border-bottom-right-radius: 4px;
+}
+
+.speaker-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.label-a {
+    color: var(--persona-a-color);
+}
+
+.label-b {
+    color: var(--persona-b-color);
+}
+
+footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

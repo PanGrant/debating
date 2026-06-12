@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Debate Arena</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎙️ Mock Debate Arena</h1>
+            <p class="subtitle">Enter any topic and watch AI personas clash in a zero-cost battle of wits!</p>
+        </header>
+
+        <main>
+            <section class="setup-section">
+                <div class="input-group">
+                    <label for="topic-input">What should they debate?</label>
+                    <input type="text" id="topic-input" placeholder="e.g., Is pineapple on pizza a culinary masterpiece?" value="Is pineapple on pizza a culinary masterpiece?">
+                </div>
+                <button id="start-btn">Start Debate ⚔️</button>
+            </section>
+
+            <section class="arena-section hidden" id="arena">
+                <div class="versus-banner">
+                    <span id="persona-a" class="persona-tag tag-a">Persona A</span>
+                    <span class="vs">VS</span>
+                    <span id="persona-b" class="persona-tag tag-b">Persona B</span>
+                </div>
+
+                <div class="chat-window" id="chat-window">
+                    <!-- Dialogue rounds will be injected here -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Built completely locally to learn DevOps at zero cost. Phase 1 Sandbox.</p>
+        </footer>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
