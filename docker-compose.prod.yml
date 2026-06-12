@@ -5,10 +5,6 @@
 services:
   backend:
     image: ghcr.io/pangrant/debate-backend:latest
-    # Remove build context to ensure it uses the pulled image
-    build: !!null 
 
   frontend:
     image: ghcr.io/pangrant/debate-frontend:latest
-    # Remove build context to ensure it uses the pulled image
-    build: !!null
