@@ -5,6 +5,10 @@
 services:
   backend:
     image: ghcr.io/pangrant/debate-backend:latest
+    ports:
+      - "8000:8000"
 
   frontend:
     image: ghcr.io/pangrant/debate-frontend:latest
+    ports:
+      - "80:80"
