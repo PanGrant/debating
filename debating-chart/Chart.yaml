@@ -1,0 +1,6 @@
+apiVersion: v2
+name: debating-chart
+description: A Helm chart for the Mock Debate Arena
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
