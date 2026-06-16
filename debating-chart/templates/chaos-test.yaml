@@ -13,22 +13,3 @@ spec:
       'app': 'backend'
   scheduler:
     cron: "@every 1m"
----
-apiVersion: chaos-mesh.org/v1alpha1
-kind: NetworkChaos
-metadata:
-  name: debating-backend-network-chaos
-  namespace: {{ .Release.Namespace }}
-spec:
-  action: delay
-  mode: one
-  selector:
-    namespaces:
-      - {{ .Release.Namespace }}
-    labelSelectors:
-      'app': 'backend'
-  delay:
-    latency: "100ms"
-    jitter: "50ms"
-  scheduler:
-    cron: "@every 1h"
