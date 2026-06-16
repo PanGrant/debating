@@ -21,6 +21,13 @@ spec:
           image: {{ .Values.backend.image }}
           ports:
             - containerPort: 8000
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
           imagePullPolicy: Always
 ---
 apiVersion: v1
