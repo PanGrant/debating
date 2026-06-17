@@ -6,10 +6,10 @@ metadata:
 spec:
   action: pod-kill
   mode: one
+  scheduler:
+    cron: "@every 1m"
   selector:
     namespaces:
       - {{ .Release.Namespace }}
     labelSelectors:
       'app': 'backend'
-  scheduler:
-    cron: "@every 1m"
