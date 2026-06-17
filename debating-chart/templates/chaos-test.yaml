@@ -1,15 +1,71 @@
 apiVersion: chaos-mesh.org/v1alpha1
 kind: PodChaos
 metadata:
-  name: debating-backend-pod-chaos
+  name: debating-backend-pod-kill
   namespace: {{ .Release.Namespace }}
 spec:
   action: pod-kill
   mode: one
-  scheduler:
-    cron: "@every 1m"
   selector:
     namespaces:
       - {{ .Release.Namespace }}
     labelSelectors:
       'app': 'backend'
+---
+apiVersion: chaos-mesh.org/v1alpha1
+kind: Schedule
+metadata:
+  name: debating-backend-pod-kill-schedule
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: "@every 1m"
+  historyLimit: 2
+  type: 'PodChaos'
+  podChaos:
+    action: pod-kill
+    mode: one
+    selector:
+      namespaces:
+        - {{ .Release.Namespace }}
+      labelSelectors:
+        'app': 'backend'
+---
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: debating-backend-network-delay
+  namespace: {{ .Release.Namespace }}
+spec:
+  action: delay
+  mode: one
+  selector:
+    namespaces:
+      - {{ .Release.Namespace }}
+    labelSelectors:
+      'app': 'backend'
+  delay:
+    latency: "100ms"
+    jitter: "50ms"
+  duration: "1h"
+---
+apiVersion: chaos-mesh.org/v1alpha1
+kind: Schedule
+metadata:
+  name: debating-backend-network-delay-schedule
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: "@every 1h"
+  historyLimit: 2
+  type: 'NetworkChaos'
+  networkChaos:
+    action: delay
+    mode: one
+    selector:
+      namespaces:
+        - {{ .Release.Namespace }}
+      labelSelectors:
+        'app': 'backend'
+    delay:
+      latency: "100ms"
+      jitter: "50ms"
+    duration: "30m"
