@@ -12,60 +12,81 @@ spec:
     labelSelectors:
       'app': 'backend'
 ---
-apiVersion: chaos-mesh.org/v1alpha1
-kind: Schedule
+apiVersion: batch/v1
+kind: CronJob
 metadata:
-  name: debating-backend-pod-kill-schedule
+  name: debating-backend-pod-kill-cronjob
   namespace: {{ .Release.Namespace }}
 spec:
-  schedule: "@every 1m"
-  historyLimit: 2
-  type: 'PodChaos'
-  podChaos:
-    action: pod-kill
-    mode: one
-    selector:
-      namespaces:
-        - {{ .Release.Namespace }}
-      labelSelectors:
-        'app': 'backend'
+  schedule: "* * * * *" # Every minute
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: backend-chaos-sa
+          restartPolicy: OnFailure
+          containers:
+          - name: kubectl-helper
+            image: bitnami/kubectl:latest
+            command:
+            - /bin/sh
+            - -c
+            - "kubectl apply -f /manifests/podchaos.yaml"
+            volumeMounts:
+            - name: manifest
+              mountPath: /manifests
+          volumes:
+          - name: manifest
+            configMap:
+              name: debating-backend-pod-kill-config
 ---
-apiVersion: chaos-mesh.org/v1alpha1
-kind: NetworkChaos
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: debating-backend-network-delay
+  name: debating-backend-pod-kill-config
   namespace: {{ .Release.Namespace }}
-spec:
-  action: delay
-  mode: one
-  selector:
-    namespaces:
-      - {{ .Release.Namespace }}
-    labelSelectors:
-      'app': 'backend'
-  delay:
-    latency: "100ms"
-    jitter: "50ms"
-  duration: "1h"
+data:
+  podchaos.yaml: |
+    apiVersion: chaos-mesh.org/v1alpha1
+    kind: PodChaos
+    metadata:
+      name: debating-backend-pod-kill
+      namespace: {{ .Release.Namespace }}
+    spec:
+      action: pod-kill
+      mode: one
+      selector:
+        namespaces:
+          - {{ .Release.Namespace }}
+        labelSelectors:
+          'app': 'backend'
 ---
-apiVersion: chaos-mesh.org/v1alpha1
-kind: Schedule
+apiVersion: v1
+kind: ServiceAccount
 metadata:
-  name: debating-backend-network-delay-schedule
+  name: backend-chaos-sa
   namespace: {{ .Release.Namespace }}
-spec:
-  schedule: "@every 1h"
-  historyLimit: 2
-  type: 'NetworkChaos'
-  networkChaos:
-    action: delay
-    mode: one
-    selector:
-      namespaces:
-        - {{ .Release.Namespace }}
-      labelSelectors:
-        'app': 'backend'
-    delay:
-      latency: "100ms"
-      jitter: "50ms"
-    duration: "30m"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: backend-chaos-role
+  namespace: {{ .Release.Namespace }}
+rules:
+- apiGroups: ["chaos-mesh.org"]
+  resources: ["podchaos"]
+  verbs: ["get", "create", "delete", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: backend-chaos-rb
+  namespace: {{ .Release.Namespace }}
+subjects:
+- kind: ServiceAccount
+  name: backend-chaos-sa
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: backend-chaos-role
+  apiGroup: rbac.authorization.k8s.io
