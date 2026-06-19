@@ -7,6 +7,7 @@ spec:
   action: pod-kill
   mode: fixed
   value: "1"
+  duration: "10s"
   selector:
     namespaces:
       - {{ .Release.Namespace }}
