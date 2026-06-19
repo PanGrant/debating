@@ -21,6 +21,10 @@ class DebateRequest(BaseModel):
 def read_root():
     return {"status": "ok", "message": "Welcome to the Mock Debate Arena API!"}
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 @app.post("/debate")
 def generate_debate(request: DebateRequest):
     topic = request.topic.strip() or "Whether technology makes us lonely"

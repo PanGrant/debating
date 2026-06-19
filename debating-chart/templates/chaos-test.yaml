@@ -5,7 +5,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   action: pod-kill
-  mode: one
+  mode: fixed
+  value: "1"
   selector:
     namespaces:
       - {{ .Release.Namespace }}
