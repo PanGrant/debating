@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // We request relative /api/debate. Nginx will reverse proxy this to backend:8000!
-            const response = await fetch('/api/debate', {
+            const response = await fetch('/debate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
