@@ -26,6 +26,7 @@ def health_check():
     return {"status": "ok"}
 
 @app.post("/debate")
+@app.post("/api/debate")
 def generate_debate(request: DebateRequest):
     topic = request.topic.strip() or "Whether technology makes us lonely"
     
